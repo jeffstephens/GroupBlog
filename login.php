@@ -10,7 +10,7 @@ if(isset($_GET['login']))
 	dbconnect();
 	
 	$email = mysql_real_escape_string($_POST['email']);
-	$salt = '$2a$07$5%TZkl3pEE^)(dFFf*&70$';
+	$salt = get_config('salt');
 	$password = crypt(mysql_real_escape_string($_POST['password']), $salt);
 	
 	$query = mysql_query("SELECT * FROM `". get_table('users') ."` WHERE `Email` = '{$email}' AND `Password` = '{$password}';");

@@ -2,6 +2,7 @@
 // Process submitted data
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
+require "parse.php";
 $step = 0;
 
 $config = Array();
@@ -17,10 +18,10 @@ $config['publicurl'] = "";
 $config['dateoffsethours'] = "";
 $config['dbprefix'] = "";
 $config['regauth'] = "";
+$config['salt'] = "";
 
 if(isset($_POST['submitted1'])) {
 	require "install_library.php";
-	require "parse.php";
 	// Build config file
 	
 	$config['SiteName'] = $_POST['SiteName'];
@@ -33,6 +34,7 @@ if(isset($_POST['submitted1'])) {
 	$config['dateoffsethours'] = $_POST['dateoffsethours'];
 	$config['dbprefix'] = $_POST['dbprefix'];
 	$config['regauth'] = $_POST['regauth'];
+	$config['salt'] = $_POST['dbsalt'];
 	
 	if(buildConfig($config)) {
 		// Build database
@@ -90,7 +92,6 @@ if(isset($_POST['submitted1'])) {
 }
 
 elseif(isset($_POST['submitted2'])) {
-	require "parse.php";
 	$connection = dbconnect();
 	
 	$name = sanitize($_POST['username']);
@@ -100,7 +101,7 @@ elseif(isset($_POST['submitted2'])) {
 	
 	if($password == $cpassword) {
 		// Hash password
-		$salt = '$2a$07$5%TZkl3pEE^)(dFFf*&70$';
+		$salt = get_config('salt');
 		$password = crypt($password, $salt);
 		$attempt = @mysql_query("INSERT INTO `". get_table('users') ."` (`Name`, `Email`, `Password`, `Registered`, `UpdateInterval`, `LastVisit`) VALUES ('{$name}', '{$email}', '{$password}', ". time() .", 60, ". time() .");");
 		
@@ -210,6 +211,9 @@ if($step == 0 || $step == 1):
 		
 		<label for="dbprefix">Database Table Prefix:</label><br />
 		<input type="text" name="dbprefix" id="dbprefix" value="<?php print $config['dbprefix']; ?>" size="40" /><br />
+		
+		<label for="dbsalt">Password Encryption Salt:</label><br />
+		<input type="text" name="dbsalt" id="dbsalt" value="<?php print genBlowfishSalt(); ?>" size="40" /> <em>Don't change this unless you know what you're doing</em>
 	</p>
 </div>
 

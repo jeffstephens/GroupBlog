@@ -41,6 +41,7 @@ if(isset($_GET['register']))
         {
         if($password == $cpassword)
           {
+          $password = crypt($password, get_config('salt'));
           $attempt = mysql_query("INSERT INTO `". get_table('users') ."` (`Name`, `Email`, `Password`, `Registered`, `UpdateInterval`) VALUES ('{$name}', '{$email}', '{$password}', ". time() .", 60);");
           
           if($attempt)

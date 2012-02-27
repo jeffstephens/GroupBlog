@@ -61,6 +61,10 @@ print "<html>
 </html>";
 }
 
+function genBlowfishSalt() {
+	return '$2a$07$5%TZkl3pEE^)(dFFf*&70$'; // TODO: Write random salt generator
+}
+
 function dbconnect()
 {
 $connection = @mysql_connect(get_config('dbhost'), get_config('dbusername'), get_config('dbpassword')) or die(error('Database Error', "A connection to the database could not be established. Please try again later."));

@@ -37,7 +37,7 @@ $info = mysql_fetch_assoc(mysql_query("SELECT * FROM `". get_table('users') ."` 
 //Save preferences
 if(isset($_GET['save']))
   {
-  $salt = '$2a$07$5%TZkl3pEE^)(dFFf*&70$';
+  $salt = get_config('salt');
   if(crypt(mysql_real_escape_string($_POST['auth']), $salt) == $info['Password'])
     {
     //Email address

@@ -141,6 +141,9 @@ $config[\'notifications\'] = $config[\'dbprefix\'] . "notifications";
 $config[\'pollq\'] = $config[\'dbprefix\'] . "pollq";
 $config[\'polla\'] = $config[\'dbprefix\'] . "polla";
 $config[\'files\'] = $config[\'dbprefix\'] . "files";
+
+// Password encryption salt (don\'t change this unless you know what you\'re doing)
+$config[\'salt\'] = "'. $config['salt'] .'";
 ?>';
 	
 	// Back up old config first
