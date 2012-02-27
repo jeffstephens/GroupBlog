@@ -53,9 +53,11 @@ You will, however, still receive:(list:bullets)
 (item)Announcements from the site administrator (Family Website System)(enditem)(item)Responses to help questions(enditem)(item)Confirmations of actions you perform (if you\\\'re using the site while your account is inactive)(enditem)(endlist:bullets)
 Your account will remain inactive until the next Weekly Cleanup. This process is performed once a week; the time varies. If when this happens your account is inactive yet you have logged in within the last 30 days, your account will be reactivated and you will once again receive notifications as usual.','Posted' => '1208409999','Modified' => '1208410114','Version' => '2')
 );		
+
 		
+		$time = time() + get_config('dateoffset');		
 		foreach($helpdata as $row) {
-			$attempt = mysql_query("INSERT INTO `". get_config('help') ."` (`Title`, `Category`, `Article`, `Posted`, `Modified`, `Version`) VALUES ('". $row['Title'] ."', '". $row['Category'] ."', '". $row['Article'] ."', '". $row['Posted'] ."', '". $row['Modified'] ."', 1);");
+			$attempt = mysql_query("INSERT INTO `". get_config('help') ."` (`Title`, `Category`, `Article`, `Posted`, `Modified`, `Version`) VALUES ('". $row['Title'] ."', '". $row['Category'] ."', '". $row['Article'] ."', '". $time ."', '". $time ."', 1);");
 			
 			if(!$attempt)
 				$error[] = mysql_error();
