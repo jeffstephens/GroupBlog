@@ -1,4 +1,10 @@
 <?php
+if(file_exists("config.inc.php"))
+	{
+	include "parse.php";
+	die(error("Site Already Configured", "A configuration file already exists. To use the installer, please delete config.inc.php from the /system directory."));
+	}
+
 // Process submitted data
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
