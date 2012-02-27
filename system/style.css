@@ -1,0 +1,150 @@
+body, textarea, input {
+font-family: 'Calibri', 'Arial', sans-serif }
+
+h2, legend {
+font-size: 150%;
+color: #003366 }
+
+h1 {
+border-bottom: 2px solid #003366;
+color: #003366;
+margin: 0;
+padding: 0;
+text-align: center;
+text-shadow: 1px 1px 2px #444;
+font-size: 250%; }
+
+h2 {
+border-bottom: 2px solid #003366;
+margin: 0;
+padding: 0;
+text-shadow: 1px 1px 2px #666; }
+
+  h2 a:link, h2 a:visited {
+  text-decoration: none }
+
+fieldset {
+border: 1px solid #000;
+background-color: #FFFFCC }
+
+label {
+	font-size: 90%;
+	color: #666;
+	padding-top: 10px;
+	padding-bottom: 0;
+	margin: 0;
+	display: inline-block;
+}
+
+input[type="text"], input[type="password"], input[type="submit"], textarea, select, option {
+font-size: 120% }
+
+legend {
+border: 1px solid #000;
+background: #F2F2F2 }
+
+input[type="text"], input[type="password"], textarea {
+border: 1px solid #000 }
+
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
+background-color: #FFFFE5 }
+
+div p {
+margin-top: 0;
+padding-top: 0 }
+
+table, tr, td {
+text-align: center }
+
+ul, ol {
+margin-top: 0;
+padding-top: 0;
+margin-bottom: 0;
+padding-bottom: 0;
+list-style: url('images/bullet.gif') }
+
+blockquote {
+margin-left: 10px;
+margin-top: 0;
+margin-bottom: 0;
+border: 1px dashed #000;
+background-color: #E0E0E0 }
+
+abbr {
+cursor: help }
+
+a:link {
+background: transparent;
+color: #000;
+text-decoration: underline }
+
+a:visited {
+background: transparent;
+color: #666;
+text-decoration: underline }
+
+a:hover, a:active, a:focus {
+background: #CCC;
+color: maroon;
+text-decoration: none;
+border-bottom: none }
+
+a img {
+border: none }
+
+.blue {
+background-color: #E5E5FF }
+
+.yellow {
+background-color: #FFFFCC }
+
+.green {
+background-color: #E6FFCC }
+
+.red {
+background-color: #FFE5E5 }
+
+.gray {
+background-color: #E6E6E6 }
+
+.orange {
+background-color: #FFE79E }
+
+.blue, .yellow, .green, .red, .gray, .orange {
+font-size: 110%;
+border-radius: 0 0 2px 2px; }
+
+.error {
+font-weight: 900;
+color: #990000;
+margin: 0;
+padding: 0 }
+
+.success {
+font-weight: 900;
+color: #006600;
+margin: 0;
+padding: 0 }
+
+p.infobar {
+background-color: #E6E6E6;
+margin: 0;
+padding: 0 }
+
+.comments {
+list-style: url('comment.gif');
+margin-top: 0;
+padding-top: 0;
+margin-bottom: 0;
+padding-bottom: 0 }
+
+.hidden, #hidden {
+display: none;
+visibility: hidden }
+
+#footer {
+text-align: center;
+color: #666;
+border-top: 1px solid #666;
+margin-bottom: 0;
+padding-bottom: 0 }

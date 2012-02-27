@@ -1,0 +1,40 @@
+<?php
+//Configuration file for family website
+$config = Array();
+
+//Software version
+$config['version'] = "2.0a";
+$config['SiteName'] = ""; //The name of the site
+
+//Optional "lockdown" (uncomment to activate)
+//$config['Lockdown'] = "There is a temporary problem with the Family Website, and all activity has been suspended until it can be resolved. Please check back in a few hours; the problem is being worked on. We apologize for this inconvenience.";
+
+//Optional value for the lockdown to automatically expire. Enter in the format "10 September 2008 11:34pm";
+//$config['Lockdown_Expiration'] = "7 April 2008 6:00pm";
+
+$config['dbhost'] = "localhost"; //The database server to connect to
+$config['dbusername'] = ""; //The mysql username
+$config['dbpassword'] = ""; //The mysql password
+$config['dbname'] = ""; //The database to use
+//A summary of what this server is used for:
+$config['serverinfo'] = "The is the latest and greatest build of Jeff's CMS.";
+$config['publicurl'] = ""; //The absolute URL to be linked to, including the installation directory (no trailing slash)
+$config['dateoffsethours'] = "0"; //The number of hours that should be ADDED to the time (negative values for subtraction)
+$config['regauth'] = ""; // The authorization code required to register. Leave blank to hide this field on the registration page.
+
+//Don't change this; it converts the dateoffsethours value from seconds to hours
+$config['dateoffset'] = ($config['dateoffsethours'] * 60 * 60);
+
+//Allow these users limited administrative privilages (User IDs)
+$config['mods'] = Array(1);
+
+//Database tables:
+$config['blog'] = "blog";
+$config['comments'] = "comments";
+$config['help'] = "help";
+$config['users'] = "users";
+$config['notifications'] = "notifications";
+$config['pollq'] = "pollq";
+$config['polla'] = "polla";
+$config['files'] = "files";
+?>

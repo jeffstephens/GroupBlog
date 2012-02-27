@@ -1,0 +1,2 @@
+<script src="http://<?php print get_table('publicurl'); ?>/system/scriptaculous/lib/prototype.js" type="text/javascript"></script>
+<script src="http://<?php print get_table('publicurl'); ?>/system/scriptaculous/src/scriptaculous.js" type="text/javascript"></script>
