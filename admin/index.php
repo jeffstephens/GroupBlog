@@ -41,6 +41,7 @@ color: #666 }
   <li><a href="managepolls.php">Manage Polls</a></li>
   <li><a href="managenotifications.php">Manage Notifications</a></li>
   <li><a href="manageusers.php">Manage Users</a></li>
+  <li><a href="defaultdata.php">Install Default Data</a></li>
 </ul>
 </div>
 <br />

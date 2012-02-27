@@ -1,6 +1,4 @@
 <?php
-ini_set('display_errors', '1');
-
 function dbsetupSQL($sitename, $dbname, $prefix) {
 	$query = "DROP TABLE IF EXISTS `" . $prefix . "blog`;
 CREATE TABLE IF NOT EXISTS `" . $prefix . "blog` (
