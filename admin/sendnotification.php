@@ -60,7 +60,7 @@ elseif(isset($success))
   print '<div class="green" style="text-align: center">'. $success .' <a href="../index.php">Home &raquo;</a></div>';
 
 else
-  print '<div class="yellow" style="text-align: center">This will deliver a notification to <strong>everyone\'s</strong> inbox on the '.get_table('SiteName'). '.</div>';
+  print '<div class="yellow" style="text-align: center">This will deliver a notification to <strong>everyone\'s</strong> inbox on '.get_table('SiteName'). '.</div>';
 
 print '
 <br />
@@ -89,7 +89,7 @@ if(!isset($success))
   if($_POST['from'] != 1)
     print " checked";
   
-  print '> <label for="fromsystem">Family Website System</label>
+  print '> <label for="fromsystem">'. get_config('SiteName') .' System</label>
 <input type="radio" name="from" id="fromyou" value="'. $_SESSION['familysite'] . '"';
 
   if($_POST['from'] == 1)
