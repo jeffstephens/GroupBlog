@@ -37,7 +37,8 @@ $info = mysql_fetch_assoc(mysql_query("SELECT * FROM `". get_table('users') ."` 
 //Save preferences
 if(isset($_GET['save']))
   {
-  if($_POST['auth'] == $info['Password'])
+  $salt = '$2a$07$5%TZkl3pEE^)(dFFf*&70$';
+  if(crypt(mysql_real_escape_string($_POST['auth']), $salt) == $info['Password'])
     {
     //Email address
     if(mysql_num_rows(mysql_query("SELECT * FROM `". get_table('users') ."` WHERE `Email` = '". mysql_real_escape_string($_POST['email']) ."' AND `ID` != {$_SESSION['familysite']};")) == 0 AND $info['Email'] != $_POST['email'])
@@ -72,7 +73,9 @@ if(isset($_GET['save']))
       {
       if($_POST['newpass'] == $_POST['confirmpass'])
         {
-        $attempt = mysql_query("UPDATE `". get_table('users') ."` SET `Password` = '". sanitize($_POST['newpass']) ."' WHERE `ID` = {$_SESSION['familysite']} LIMIT 1;");
+        $salt = '$2a$07$5%TZkl3pEE^)(dFFf*&70$';
+		$password = crypt(sanitize($_POST['newpass']), $salt);
+        $attempt = mysql_query("UPDATE `". get_table('users') ."` SET `Password` = '". $password ."' WHERE `ID` = {$_SESSION['familysite']} LIMIT 1;");
         
         if($attempt)
           $success .= "Your password has been changed.<br />";
@@ -323,8 +326,7 @@ else
 <strong>Secret Question/Answer</strong><br />
 <label for="secretq">Question:</label> <input type="text" id="secretq" name="secretq" size="50" <?php print ' value="'. stripslashes($info['secretq']) .'"'; ?>> <a href=" javascript: void(0);" onClick=" suggestQuestion();">Suggest Question</a><br />
 <label for="secreta">Answer:</label> <input type="text" id="secreta" name="secreta" size="50" <?php print ' value="'. stripslashes($info['secreta']) .'"'; ?>><br />
-<span style="color: #666">Type a question and answer that only you would know the answer to. If you forget your password, this can be used to identify you and you can reset your password.<br />
-If you leave this blank, you will need to email Jeff to get your password reset.</span>
+<span style="color: #666">Type a question and answer that only you would know the answer to. If you forget your password, this can be used to identify you and you can reset your password.</span>
 <br />
 <br />
 <input type="button" value="Save Settings" style="font-size: 100%" onClick=" selectTab('save');">

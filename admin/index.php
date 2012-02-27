@@ -22,7 +22,7 @@ color: #666 }
 <body>
 <?php include "../userinfo.php"; ?>
 <h1><?php print get_table('SiteName'); ?> Administration</h1>
-<div class="yellow" style="text-align: center">Here you can view many aspects of the <?php print get_table('SiteName'); ?> core system and manage family website data.</div>
+<div class="yellow" style="text-align: center">Here you can view many aspects of the core system and manage website data.</div>
 <br />
 <h2>Administrative Actions</h2>
 <div class="orange">
@@ -67,6 +67,6 @@ color: #666 }
 <span>Family Website Adjusted Time:</span> <?php print date("g:i a, n/j/Y", (time() + get_table('dateoffset'))); ?> (<?php print get_table('dateoffsethours'); ?> hour difference)
 </div>
 <br />
-<p id="footer">Family Website Administration - Last System Update: <?php print date("n/j/Y", (getlastmod() + get_table('dateoffset'))); ?></p>
+<p id="footer"><?php print get_config("SiteName"); ?> Administration - Last System Update: <?php print date("n/j/Y", (getlastmod() + get_table('dateoffset'))); ?></p>
 </body>
 </html>

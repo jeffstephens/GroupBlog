@@ -3,48 +3,84 @@ ob_start();
 @session_start();
 setcookie("LastAccess", time()) or send_notification(1, -2, "Error Report", "The LastAccess cookie could not be set.");
 
-//Lockdown?
-if(@get_table('Lockdown') AND !isset($_GET['override']))
-  {
-  if(strlen(get_table("Lockdown_Expiration")) > 0)
-    $expiration = (strtotime(get_table('Lockdown_Expiration')) + get_table('dateoffset'));
-  else
-    $expiration = (time() + 86400);
-  
-  if(time() <= $expiration)
-    die(error('Down for Maintenance', get_table('Lockdown') . "<br /><br />". get_table("Lockdown_Expiration")));
-  }
+if(!@include("config.inc.php")) {
+	$allowed = Array("install.php", "install_library.php");
+	$filename = explode("/", $_SERVER['PHP_SELF']);
+	
+	if(!in_array($filename[(sizeof($filename) - 1)], $allowed)) {
+		die(error("Site Not Configured", "This site hasn't been set up yet. Check back soon!", true));
+	}
+}
 
-function error($title, $message)
+else {
+	require "catcher.php";
+}
+
+function error($title, $message, $independent = false)
 {
+if($independent) {
+	$sitetitle = "GroupBlog";
+	$style = "<style type=\"text/css\">
+body, textarea, input {
+	font-family: 'Calibri', 'Arial', sans-serif }
+
+h1 {
+	border-bottom: 2px solid #003366;
+	color: #003366;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	text-shadow: 1px 1px 2px #444;
+	font-size: 250%; }
+
+div p {
+	margin-top: 0;
+	padding-top: 0 }
+	
+.red {
+	background-color: #FFE5E5;
+	font-size: 110%;
+	border-radius: 0 0 2px 2px; }
+</style>";
+}
+
+else {
+	$sitetitle = get_config("SiteName");
+	$style = "<link type=\"text/css\" href=\"http://". get_config('publicurl') ."/system/style.css\" rel=\"stylesheet\">";
+}
+
 print "<html>
 <head>
-<title>". get_config('SiteName') .": Error</title>
-<link type=\"text/css\" href=\"http://". get_config('publicurl') ."/system/style.css\" rel=\"stylesheet\">
+<title>". $sitetitle .": Error</title>
+". $style ."
 </head>
 <body>
-<h1>{$title}</h1>
-<div class=\"red\" style=\"text-align: center\">{$message}</div>
+	<h1>{$title}</h1>
+	<div class=\"red\" style=\"text-align: center\"><p>{$message}</p></div>
 </body>
 </html>";
 }
 
 function dbconnect()
 {
-
-@mysql_connect(get_config('dbhost'), get_config('dbusername'), get_config('dbpassword')) or die(error('Database Error', "A connection to the database could not be established. Please try again later."));
+$connection = @mysql_connect(get_config('dbhost'), get_config('dbusername'), get_config('dbpassword')) or die(error('Database Error', "A connection to the database could not be established. Please try again later."));
 @mysql_select_db(get_config('dbname')) or die(error('Database Error', "A connection to the database could not be established. Please try again later."));
+return $connection;
 }
 
 // Deprecated
 function get_table($tablename)
 {
-	get_config($tablename);
+	return get_config($tablename);
 }
 
 function get_config($option) {
-	include "config.inc.php";
-	return $config[$option];
+	if(@include("config.inc.php")) {
+		return $config[$option];
+	}
+	else {
+		return "[Configuration File Missing]";
+	}
 }
 
 function sanitize($input)

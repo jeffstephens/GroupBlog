@@ -10,3 +10,7 @@ project from a few years ago that I've decided to start development on again. My
 business is a big backend rewrite to encompass all the new knowledge I've gained since the
 original codebase was created. Then, I'll work on the interface aspect which could also use some
 touching up. The Microsoft icons will be the first to go :)
+
+If you want to install this on your own server, copy all the files over and navigate to
+/system/install.php in a browser. The rest should be self-explanatory but feel free to send me
+an email if you need help!

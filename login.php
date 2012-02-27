@@ -1,42 +1,40 @@
 <?php
 session_start();
 if(isset($_SESSION['familysite']))
-  Header("Location: index.php");
+	Header("Location: index.php");
 
 include "system/parse.php";
 
 if(isset($_GET['login']))
-  {
-  dbconnect();
-  
-  $email = mysql_real_escape_string($_POST['email']);
-  $password = mysql_real_escape_string($_POST['password']);
-  
-  $query = mysql_query("SELECT * FROM `". get_table('users') ."` WHERE `Email` = '{$email}' AND `Password` = '{$password}';");
-  
-  if(mysql_num_rows($query) == 1)
-    {
-    $info = mysql_fetch_assoc($query);
-    $_SESSION['familysite'] = $info['ID'];
-    
-    if(isset($_POST['go']))
-      Header("Location: process.php?go={$_POST['go']}");
-    elseif((time() - $info['LastVisit']) > 2592000)
-      Header("Location: loginmessage.php?welcomeback&diff=". (time() - $info['LastVisit']));
-    else
-      Header("Location: process.php?go=index.php");
-    }
-  
-  else
-    $error .= "Your email/password combination is incorrect.";
+	{
+	dbconnect();
+	
+	$email = mysql_real_escape_string($_POST['email']);
+	$salt = '$2a$07$5%TZkl3pEE^)(dFFf*&70$';
+	$password = crypt(mysql_real_escape_string($_POST['password']), $salt);
+	
+	$query = mysql_query("SELECT * FROM `". get_table('users') ."` WHERE `Email` = '{$email}' AND `Password` = '{$password}';");
+	
+	if(mysql_num_rows($query) == 1)
+	{
+	$info = mysql_fetch_assoc($query);
+	$_SESSION['familysite'] = $info['ID'];
+	
+	if(isset($_POST['go']))
+		Header("Location: process.php?go={$_POST['go']}");
+	elseif((time() - $info['LastVisit']) > 2592000)
+		Header("Location: loginmessage.php?welcomeback&diff=". (time() - $info['LastVisit']));
+	else
+		Header("Location: process.php?go=index.php");
+	}
+	
+	else
+		$error .= "Your email/password combination is incorrect.";
   }
 ?><html>
 <head>
-<link type="text/css" href="system/style.css" rel="stylesheet">
-<style type="text/css">
-body {
-background-color: #A3A3A3 }
-</style>
+<link type="text/css" href="system/style.css" rel="stylesheet" />
+<link type="text/css" href="system/sysform.css" rel="stylesheet" />
 <title>Login to <?php print get_table('SiteName'); ?></title>
 <?php include "header.php"; ?>
 </head>
@@ -56,7 +54,8 @@ if(isset($_POST['go']))
 
 <label for="email">Email Address:</label> <input type="text" name="email" id="email"><br />
 <label for="password">Password:</label> <input type="password" name="password" id="password"><br />
-<input type="submit" value="Login&raquo;"> <a href="resetpassword.php">Forgot your Password?</a>
+<p class="submit"><input type="submit" value="Login &raquo;"></p>
+<p class="formfooter"><a href="resetpassword.php">Forgotten Password?</a></p>
 </fieldset>
 </form>
 <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">

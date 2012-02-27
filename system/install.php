@@ -21,7 +21,6 @@ $config['regauth'] = "";
 if(isset($_POST['submitted1'])) {
 	require "install_library.php";
 	require "parse.php";
-	
 	// Build config file
 	
 	$config['SiteName'] = $_POST['SiteName'];
@@ -35,53 +34,91 @@ if(isset($_POST['submitted1'])) {
 	$config['dbprefix'] = $_POST['dbprefix'];
 	$config['regauth'] = $_POST['regauth'];
 	
-	//buildConfig($config);
-	
-	// Build database
-	
-	$connection = mysql_connect($config['dbhost'], $config['dbusername'], $config['dbpassword']);
-	
-	if($connection) {
-		$config['dbname'] = sanitize($config['dbname']);
-		$createquery = mysql_query("CREATE DATABASE IF NOT EXISTS `". $config['dbname'] ."`;");
+	if(buildConfig($config)) {
+		// Build database
 		
-		if($createquery) {
-			$selectdb = mysql_select_db(sanitize($config['dbname']));
+		$connection = @mysql_connect($config['dbhost'], $config['dbusername'], $config['dbpassword']);
+		
+		if($connection) {
+			$config['dbname'] = sanitize($config['dbname']);
+			$createquery = @mysql_query("CREATE DATABASE IF NOT EXISTS `". $config['dbname'] ."`;");
 			
-			if($selectdb) {
-				$sql = dbsetupSQL(sanitize($config['SiteName']), $config['dbname'], sanitize($config['dbprefix']));
-				print nl2br($sql);
-				$buildquery = mysql_query($sql);
+			if($createquery) {
+				$selectdb = @mysql_select_db(sanitize($config['dbname']));
 				
-				if($buildquery) {
-				
+				if($selectdb) {
+					$sql = dbsetupSQL(sanitize($config['SiteName']), $config['dbname'], sanitize($config['dbprefix']));
+					//print nl2br($sql);
+					
+					$buildqueries = explode(";", $sql);
+					array_pop($buildqueries);
+					
+					foreach($buildqueries as $query) {
+						//print "Query: " . $query . "<br />";
+						if(@mysql_query($query . ";")) {
+							;
+						}
+						else {
+							 $error1[] = "Database query failed: ". mysql_error();
+							 $dberror = true;
+						}
+					}
 				}
 				
 				else {
-					$error1[] = "Could not build database structure. Make sure your MySQL account has sufficient permissions (CREATE, specifically).<br />\n<span style=\"color: #666\">". mysql_error() ."</span>";
+					$error1[] = "Could not select database `". $config['dbname'] ."`.<br />\n<span style=\"color: #666\">". mysql_error() ."</span>";
 				}
 			}
 			
 			else {
-			
+				$error1[] = "Could not create database `". $config['dbname'] ."`.<br />\n<span style=\"color: #666\">". mysql_error() ."</span>";
 			}
 		}
 		
 		else {
-			$error1[] = "Could not create database `". $config['dbname'] ."`.<br />\n<span style=\"color: #666\">". mysql_error() ."</span>";
+			$error1[] = "Database connection couldn't be established. Check your credentials and your database configuration and try again.<br />\n<span style=\"color: #666\">". mysql_error() ."</span>";
+		}
+	}
+	else {
+		$error1[] = "The configuration file couldn't be written. Make sure PHP has write access to the /system directory, or build the file yourself based on the included config.inc.example file.";
+	}
+	
+	if(isset($error1))
+		$step = 1; // Means still on the first step but with errors
+	else
+		$step = 2; // Means ready for step 2
+}
+
+elseif(isset($_POST['submitted2'])) {
+	require "parse.php";
+	$connection = dbconnect();
+	
+	$name = sanitize($_POST['username']);
+	$password = sanitize($_POST['password']);
+	$cpassword = sanitize($_POST['cpassword']);
+	$email = sanitize($_POST['email']);
+	
+	if($password == $cpassword) {
+		// Hash password
+		$salt = '$2a$07$5%TZkl3pEE^)(dFFf*&70$';
+		$password = crypt($password, $salt);
+		$attempt = @mysql_query("INSERT INTO `". get_table('users') ."` (`Name`, `Email`, `Password`, `Registered`, `UpdateInterval`, `LastVisit`) VALUES ('{$name}', '{$email}', '{$password}', ". time() .", 60, ". time() .");");
+		
+		if(!$attempt) {
+			$error2[] = "Your user account couldn't be created due to a database error.<br /><span style=\"color: #666\">". mysql_error() ."</span>";
 		}
 	}
 	
 	else {
-		$error1[] = "Database connection couldn't be established. Check your credentials and your database configuration and try again.<br />\n<span style=\"color: #666\">". mysql_error() ."</span>";
+		$error2[] = "Your two passwords didn't match. Please try again.";
 	}
 	
-	$step = 1;
-}
-
-elseif(isset($_POST['submitted2'])) {
+	mysql_close($connection);
 	
-	$step = 2;
+	if(isset($error2))
+		$step = 3; // Means still on the second step but with errors
+	else
+		$step = 4; // Means good to go, time to login and get started
 }
 
 $topmessage = Array();
@@ -99,8 +136,21 @@ if(isset($error1)) {
 }
 
 else
-	$topmessage[1] = "<strong>Nice!</strong> Basic configuration is done, and the database has been built. We just need a few more things.<br />
+	$topmessage[2] = "<strong>Nice!</strong> Basic configuration is done, and the database has been built. We just need a few more things.<br />
 	<span style=\"color: #666\">If you want to change these configuration settings in the future, take a look at /system/config.inc.php. (UI coming in a future release)</span>";
+
+if(isset($error2)) {
+	$topdivcolor = "red";
+	$topmessage[3] = "<strong>Uh oh!</strong> Something went wrong.";
+	
+	foreach($error2 as $row) {
+		$topmessage[3] .= "<br />\n" . "	" . $row;
+	}
+}
+
+else {
+	$topmessage[4] = "<strong>Awesome!</strong> You're good to go. Now you can <a href=\"../login.php\">login to your site</a>!";
+}
 
 // Guess site URL
 $urlstring = $_SERVER['SERVER_NAME'];
@@ -119,7 +169,7 @@ $urlstring = $_SERVER['SERVER_NAME'];
 
 <form action="install.php" method="post">
 <?php
-if(!isset($_POST['submitted1']) || isset($error1)):
+if($step == 0 || $step == 1):
 ?>
 <input type="hidden" name="submitted1" value="true" />
 
@@ -162,8 +212,12 @@ if(!isset($_POST['submitted1']) || isset($error1)):
 		<input type="text" name="dbprefix" id="dbprefix" value="<?php print $config['dbprefix']; ?>" size="40" /><br />
 	</p>
 </div>
+
+<p style="font-size: 200%; text-align: center"><a href="javascript:void(0);" onclick="document.forms[0].submit();">Next Step &raquo;</a></p>
+<noscript><p style="text-align: center"><input type="submit" value="Next Step &raquo;" /><br />(Use this or enable Javascript)</p></noscript>
+
 <?php
-elseif(!isset($_POST['submitted2']) || isset($error2)):
+elseif($step == 2 || $step == 3):
 ?>
 
 <input type="hidden" name="submitted2" value="true" />
@@ -172,20 +226,29 @@ elseif(!isset($_POST['submitted2']) || isset($error2)):
 <div class="yellow">
 	<p>
 		<label for="username">Username:</label><br />
-		<input type="text" name="username" id="username" /><br />
+		<input type="text" name="username" id="username" size="40" value="<?php if(isset($name)) print $name;?>" /><br />
 		
 		<label for="password">Password:</label><br />
-		<input type="password" name="password" id="password" /><br />
+		<input type="password" name="password" id="password" size="40" /><br />
 		
 		<label for="cpassword">Password Again:</label><br />
-		<input type="password" name="cpassword" id="cpassword" /><br />
+		<input type="password" name="cpassword" id="cpassword" size="40" /><br />
 		
-	</p>
+		<label for="email">Email Address</label><br />
+		<input type="text" name="email" id="email" size="40" value="<?php if(isset($email)) print $email;?>" /><br />
+		</p>
 </div>
 
-<?php endif; ?>
 <p style="font-size: 200%; text-align: center"><a href="javascript:void(0);" onclick="document.forms[0].submit();">Next Step &raquo;</a></p>
 <noscript><p style="text-align: center"><input type="submit" value="Next Step &raquo;" /><br />(Use this or enable Javascript)</p></noscript>
+
+<?php
+elseif($step == 4):
+?>
+
+<p style="font-size: 200%; text-align: center"><a href="../login.php">Login and Get Started &raquo;</a></p>
+
+<?php endif; ?>
 </form>
 </body>
 </html>

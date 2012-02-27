@@ -29,7 +29,9 @@ if(isset($_POST['newpass']) AND isset($_POST['ID']))
   {
   if($_POST['newpass'] == $_POST['cnewpass'])
     {
-    $attempt = mysql_query("UPDATE `". get_table('users') ."` SET `Password` = '". sanitize($_POST['newpass']) ."' WHERE `ID` = {$_POST['ID']} LIMIT 1;");
+    $salt = '$2a$07$5%TZkl3pEE^)(dFFf*&70$';
+	$password = crypt(sanitize($_POST['newpass']), $salt);
+    $attempt = mysql_query("UPDATE `". get_table('users') ."` SET `Password` = '". $password ."' WHERE `ID` = {$_POST['ID']} LIMIT 1;");
     
     if($attempt)
       print '<div class="green" style="text-align: center">
@@ -46,7 +48,7 @@ Your password couldn\'t be changed due to a system error. Please try again later
 <br />
 <strong>mysql_error():</strong> ". mysql_error() ."<br />
 <strong>mysql_query:</strong><br />
-<blockquote>UPDATE `". get_table('users') ."` SET `Password` = '". sanitize($_POST['newpass']) ."' WHERE `ID` = {$_POST['ID']} LIMIT 1;</blockquote>");
+<blockquote>UPDATE `". get_table('users') ."` SET `Password` = '". $password ."' WHERE `ID` = {$_POST['ID']} LIMIT 1;</blockquote>");
       }
     }
   

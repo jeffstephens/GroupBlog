@@ -98,22 +98,22 @@ CREATE TABLE IF NOT EXISTS `". $prefix . "users` (
 }
 
 function buildConfig($config) {
-	$config['version'] = "2.0a";
-	$config['Lockdown'] = "There is a temporary problem with ". $config['SiteName'] .", and all activity has been suspended until it can be resolved. Please check back in a few hours; the problem is being worked on. We apologize for this inconvenience.";
+	$version = "2.0a";
+	$lockdown = "There is a temporary problem with ". $config['SiteName'] .", and all activity has been suspended until it can be resolved. Please check back in a few hours; the problem is being worked on. We apologize for this inconvenience.";
 	
 	$output = '<?php
 // Configuration file for family website
 $config = Array();
 
 // Software version
-$config[\'version\'] = "'. $config['version'] .'";
+$config[\'version\'] = "'. $version .'";
 $config[\'SiteName\'] = "'. $config['SiteName'] . '"; // The name of the site
 
 // Optional "lockdown" (uncomment to activate)
-// $config[\'Lockdown\'] = "'. $config['Lockdown'] .'";
+// $config[\'Lockdown\'] = "'. $lockdown .'";
 
 // Optional value for the lockdown to automatically expire. Enter in the format "10 September 2008 11:34pm";
-// $config[\'Lockdown_Expiration\'] = "'. $config['Lockdown_Expiration'] .'";
+// $config[\'Lockdown_Expiration\'] = "";
 
 $config[\'dbhost\'] = "'. $config['dbhost'] .'"; // The database server to connect to
 $config[\'dbusername\'] = "'. $config['dbusername'] .'"; // The mysql username
@@ -143,12 +143,19 @@ $config[\'polla\'] = $config[\'dbprefix\'] . "polla";
 $config[\'files\'] = $config[\'dbprefix\'] . "files";
 ?>';
 	
+	// Back up old config first
 	if(file_exists("config.inc.php")) {
 		$oldconfig = @file_get_contents("config.inc.php");
 		file_put_contents("config.inc.bak.php", $oldconfig);
-		@unlink("config.inc.php"); // Clear it out
 	}
-	file_put_contents("config.inc.php", $output);
+	
+	// Create new config file
+	$handle = fopen("config.inc.php", "w");
+	$write = fwrite($handle, $output);
+	fclose($handle);
+
+	if($write === false)
+		return false;
 	
 	return true;
 }
