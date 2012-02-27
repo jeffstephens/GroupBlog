@@ -244,15 +244,25 @@ while($row = mysql_fetch_assoc($query))
   
   unset($attachment);
   }
+ 
+$entrycount = mysql_num_rows(mysql_query("SELECT * FROM `". get_table('blog') ."`;"));
+
+print '<p id="footer">Displaying ';
+
+if($entrycount < 5)
+	print $entrycount;
+else
+	print '5';
+
+print ' out of '. $entrycount .' entries. <a href="blog.php">View More &raquo;</a> Last system update: '. date("g:ia n/j/y", (getlastmod() + get_table('dateoffset'))) .' <a href="rss.php"><img src="system/images/rss.gif"></a></p>';
 ?>
-<p id="footer">Displaying 5 out of <?php print mysql_num_rows(mysql_query("SELECT * FROM `". get_table('blog') ."`;")); ?> entries. <a href="blog.php">View More &raquo;</a> Last system update: <?php print date("g:ia n/j/y", (getlastmod() + get_table('dateoffset'))); ?> <a href="rss.php"><img src="system/images/rss.gif"></a></p>
 
 <!--Check for compatibility problems-->
 <noscript>
 <br />
 <div class="red" style="text-align: center; border-top: 1px solid #000; border-bottom: 1px solid #000; padding-bottom: 3px">
 <p style="font-weight: 900; margin: 0; padding: 0; font-size: 110%">Javascript Disabled</p>
-You currently either have Javascript disabled in your browser or your browser doesn't support it. There are many features on the <?php print get_table('SiteName'); ?> that use Javascript, so you might want to consider <a href="http://www.google.com/support/bin/answer.py?answer=23852">enabling it</a> or <a href="http://www.mozilla.com/en-US/firefox/?from=getfirefox">upgrading your browser</a>.
+You currently either have Javascript disabled in your browser or your browser doesn't support it. There are many features on <?php print get_table('SiteName'); ?> that use Javascript, so you might want to consider <a href="http://www.google.com/support/bin/answer.py?answer=23852">enabling it</a> or <a href="https://www.google.com/chrome/">upgrading your browser</a>.
 </div>
 </noscript>
 <?php
