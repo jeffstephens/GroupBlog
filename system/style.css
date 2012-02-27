@@ -1,5 +1,6 @@
 body, textarea, input {
-font-family: 'Calibri', 'Arial', sans-serif }
+font-family: 'Calibri', 'Arial', sans-serif;
+ }
 
 h2, legend {
 font-size: 150%;
@@ -139,3 +140,37 @@ color: #666;
 border-top: 1px solid #666;
 margin-bottom: 0;
 padding-bottom: 0 }
+
+#userinfo {
+	position: fixed;
+	opacity: 0.9;
+	top: 0;
+	left: 0;
+	width: 100%;
+	border-bottom: 1px solid #000;
+	box-shadow: 0 2px 4px #666;
+	padding: 5px;
+	border-radius: 0;
+	font-size: 1.2em;
+	background-color: #E5E5FF;
+}
+
+	#userinfo a {
+		padding: 2px;
+	}
+
+	#userinfoleft {
+		float: left;
+		width: 45%;
+	}
+	
+	#userinforight {
+		float: right;
+		text-align: right;
+		width: 40%;
+		padding-right: 10px;
+	}
+
+#userinfopadder {
+margin-bottom: 55px;
+}

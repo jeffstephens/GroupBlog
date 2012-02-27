@@ -64,10 +64,8 @@ if($userinfo['UpdateInterval'] > 0)
 </script>
 <div id="updatebox" style="position: fixed; width: 30%; left: 35%; top: 0; background-color: #FFFFCC; text-align: center; border: 1px solid #000; border-top: none !important; display: none; opacity: 0.9"></div>
 
-<div style="width: 100%; border-bottom: 1px solid #000; padding-bottom: 2px" class="blue" id="userinfo">
-<table style="width: 100%; padding: 0; margin: 0; font-size: 110%">
-<tr>
-<td style="text-align: left; width: 50%">
+<div id="userinfo">
+<div id="userinfoleft">
 <a href="<?php print "http://" . get_table('publicurl'); ?>/index.php">Home</a>
 |
 <a href="<?php print "http://" . get_table('publicurl'); ?>/addentry.php">Add Entry</a>
@@ -79,8 +77,8 @@ if($_SESSION['familysite'] == 1 && strstr($_SERVER['REQUEST_URI'], "help"))
 if($_SESSION['familysite'] == 1)
   print " | <a href=\"http://". get_table('publicurl') ."/admin/\">Admin</a>";
 ?>
-</td>
-<td style="text-align: right !important">
+</div>
+<div id="userinforight" style="text-align: right">
 <strong>Welcome, <?php
 if(!function_exists("dbconnect")) include "system/parse.php";
 dbconnect();
@@ -89,8 +87,6 @@ mysql_query("UPDATE `". get_table('users') ."` SET `LastVisit` = ". time() ." WH
 
 print $userinfo['Name'];
 ?>!</strong> <a href="<?php print "http://" . get_table('publicurl'); ?>/preferences.php">Set Preferences</a> | <a href="<?php print "http://" . get_table('publicurl'); ?>/logout.php">Logout</a>
-</td>
-</tr>
-</table>
 </div>
-<br />
+</div>
+<div id="userinfopadder"></div>
