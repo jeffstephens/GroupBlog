@@ -159,6 +159,16 @@ $urlstring = $_SERVER['SERVER_NAME'];
 <head>
 <title>CMS Setup</title>
 <link type="text/css" href="style.css" rel="stylesheet" />
+<style type="text/css">
+label {
+	font-size: 90%;
+	color: #666;
+	padding-top: 10px;
+	padding-bottom: 0;
+	margin: 0;
+	display: inline-block;
+}
+</style>
 </head>
 <body>
 <h1>Installation</h1>

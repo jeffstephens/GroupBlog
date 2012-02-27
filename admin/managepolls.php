@@ -7,6 +7,65 @@ if(!isset($_SESSION['familysite']))
   Header("Location: ../login.php?go=admin/managepolls.php");
 
 dbconnect();
+
+function printPolls($pollquery)
+{
+if(mysql_num_rows($pollquery) == 0)
+    print "There are no current or future polls.";
+
+	else
+	{
+	print "<ul>\n";
+	
+	while($row = mysql_fetch_assoc($pollquery))
+		{
+		$responses = explode("
+", stripslashes($row['Answers']));
+		$responselist = "";
+		
+		for($i = 0; $i < count($responses); $i++)
+			{
+			$responselist .= trim($responses[$i]);
+			
+			if($i < (count($responses) - 1))
+			$responselist .= ", ";
+			}
+	
+		if($row['Week'] == date("W", (time() + get_table('dateoffset'))))
+		$activeweek = ", currently active";
+		
+		elseif($row['Year'] == date("Y", (time() + get_table('dateoffset'))))
+			{
+			$activeweekcount = ($row['Week'] - date("W", (time() + get_table('dateoffset'))));
+			
+			if($activeweekcount == 1)
+				$activeweek = ", active 1 week from now";
+			elseif($activeweekcount > 1)
+				$activeweek = ", active {$activeweekcount} weeks from now";
+			elseif($activeweekcount == -1)
+				$activeweek = ", active 1 week ago";
+			else
+				$activeweek = ", active ". abs($activeweekcount) ." weeks ago";
+			}
+		else
+			$activeweek = ", active in week {$row['Week']} of {$row['Year']}";
+		
+		if($_SESSION['familysite'] == 1)
+			$controls = " <a href=\"managepolls.php?delete={$row['ID']}\"><img src=\"../system/images/delete.gif\"> Delete Poll</a>";
+		
+		elseif($row['Creator'] == $_SESSION['familysite'] AND "{$row['Week']}{$row['Year']}" != date("W", (time() + get_table('dateoffset'))) . date("Y", (time() + get_table('dateoffset'))))
+			$controls = " <a href=\"managepolls.php?delete={$row['ID']}\"><img src=\"../system/images/delete.gif\"> Delete Poll</a>";
+		
+		print "<li><strong>". stripslashes($row['Question']) ."</strong><br />
+<span>Created by ". authorlookup($row['Creator']) ."{$activeweek}.{$controls}</span><br />
+<span>Responses:</span> {$responselist}</li><br />\n";
+		
+		unset($controls);
+		}
+	
+	print "\n</ul>";
+	}
+	}
 ?><html>
 <head>
 <link type="text/css" rel="stylesheet" href="../system/style.css">
@@ -101,63 +160,29 @@ elseif(isset($_GET['sure']))
 
 else
     {
-    print '<h2>Present and Future Polls</h2>
-<div class="blue">
-';
-
-  $pollquery = mysql_query("SELECT * FROM `". get_table('pollq') ."` WHERE `Week` >= ". date("W", (time() + get_table('dateoffset'))) ." AND `Year` >= ". date("Y", (time() + get_table('dateoffset'))) ." ORDER BY `Week` ASC, `Year` ASC;");
-
-  if(mysql_num_rows($pollquery) == 0)
-    print "There are no current or future polls.";
-
-  else
-    {
-    print "<ul>\n";
-    
-    while($row = mysql_fetch_assoc($pollquery))
-      {
-      $responses = explode("
-", stripslashes($row['Answers']));
-      $responselist = "";
-      
-      for($i = 0; $i < count($responses); $i++)
-        {
-        $responselist .= "{$responses[$i]}";
-        
-        if($i < (count($responses) - 1))
-          $responselist .= ", ";
-        }
-      
-      if($row['Week'] == date("W", (time() + get_table('dateoffset'))))
-        $activeweek = ", currently active";
-      
-      elseif($row['Year'] == date("Y", (time() + get_table('dateoffset'))))
-        {
-        $activeweekcount = ($row['Week'] - date("W", (time() + get_table('dateoffset'))));
-        
-        if($activeweekcount > 1)
-          $activeweek = ", active {$activeweekcount} weeks from now";
-        else
-          $activeweek = ", active {$activeweekcount} week from now";
-        }
-      else
-        $activeweek = ", active in week {$row['Week']} of {$row['Year']}";
-      
-      if($_SESSION['familysite'] == 1)
-        $controls = " <a href=\"managepolls.php?delete={$row['ID']}\"><img src=\"../system/images/delete.gif\"> Delete Poll</a>";
-      
-       elseif($row['Creator'] == $_SESSION['familysite'] AND "{$row['Week']}{$row['Year']}" != date("W", (time() + get_table('dateoffset'))) . date("Y", (time() + get_table('dateoffset'))))
-        $controls = " <a href=\"managepolls.php?delete={$row['ID']}\"><img src=\"../system/images/delete.gif\"> Delete Poll</a>";
-      
-      print "<li><strong>". stripslashes($row['Question']) ."</strong><br />
-  <span>Created by ". authorlookup($row['Creator']) ."{$activeweek}.{$controls}</span><br />
-  <span>Responses:</span> {$responselist}</li><br />\n";
-      
-      unset($controls);
-      }
-    
-    print "\n</ul>";
-    }
+    // TODO: Fix year wrap-around calculation
+    // Print out present and future polls
+	$pollquery = mysql_query("SELECT * FROM `". get_table('pollq') ."` WHERE `Week` >= ". date("W", (time() + get_table('dateoffset'))) ." AND `Year` >= ". date("Y", (time() + get_table('dateoffset'))) ." ORDER BY `Week` ASC, `Year` ASC;");
+	
+	print '<h2>Present and Future Polls ('. mysql_num_rows($pollquery) .')</h2>
+	<div class="blue">
+	';
+	
+	printPolls($pollquery);
+	
+	print "\n</div>\n<br />\n";
+	
+	// Print out past (expired) polls
+	
+	$pollquery = mysql_query("SELECT * FROM `". get_table('pollq') ."` WHERE `Week` < ". date("W", (time() + get_table('dateoffset'))) ." AND `Year` <= ". date("Y", (time() + get_table('dateoffset'))) ." ORDER BY `Week` ASC, `Year` DESC;");
+	
+	print "<h2>Past Polls (". mysql_num_rows($pollquery) .")</h2>
+	<div class=\"blue\">
+	";
+	
+	printPolls($pollquery);
+	
+	print "\n</div>\n";
   }
 ?>
 </div>

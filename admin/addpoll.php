@@ -60,8 +60,8 @@ if(isset($_GET['save']))
       $displayanswers .= "<input type=\"radio\" id=\"l{$i}\" name=\"pollpreview\" value=\"{$i}\"> <label for=\"l{$i}\">{$displayanswersarray[$i]}</label><br />
   ";
       
-      $entryweek = date("W");
-      $entryyear = date("Y");
+      $entryweek = date("W", time() + get_config('dateoffset'));
+      $entryyear = date("Y", time() + get_config('dateoffset'));
       
       $attempt = mysql_query("INSERT INTO `". get_table('pollq') ."` (`Creator`, `Week`, `Year`, `Question`, `Answers`, `published`) VALUES ('{$_SESSION['familysite']}', '{$entryweek}', '{$entryyear}', '{$question}', '{$answers}', 0);");
       

@@ -256,12 +256,14 @@ You currently either have Javascript disabled in your browser or your browser do
 </div>
 </noscript>
 <?php
+/* TODO: update this to check for IE6 and suggest Chrome instead of Firefox
+
 if(strstr($_SERVER['HTTP_USER_AGENT'], "MSIE"))
   print '<br />
 <div class="red" style="text-align: center; border-top: 1px solid #000; border-bottom: 1px solid #000; padding-bottom: 3px">
 <p style="font-weight: 900; margin: 0; padding: 0; font-size: 110%">Internet Explorer Detected</p>
 We have detected that you are viewing the '. get_table('SiteName') .' using Internet Explorer. While it will function correctly, it looks and works better in a browser such as <a href="http://www.mozilla.com/en-US/firefox/?from=getfirefox">Firefox</a>.
-</div>';
+</div>';*/
 ?>
 </td>
 
