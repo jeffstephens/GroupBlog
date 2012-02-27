@@ -24,6 +24,10 @@ border: none }
 	tbody #blog p {
 		margin-bottom: 0;
 	}
+	
+	tbody #blog h2 {
+		margin-top: 1em;
+	}
 
 h1 {
 padding: 0;
