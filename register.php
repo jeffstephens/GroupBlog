@@ -35,7 +35,7 @@ if(isset($_GET['register']))
     $cpassword = mysql_real_escape_string($_POST['cpassword']);
     $auth = mysql_real_escape_string($_POST['auth']);
     
-    if(get_option($regauth) == $auth)
+    if(get_config($regauth) == $auth)
       {
       if(mysql_num_rows(mysql_query("SELECT * FROM `". get_table('users') ."` WHERE `Email` = '". mysql_real_escape_string($_POST['email']) ."';")) == 0)
         {
@@ -49,7 +49,7 @@ if(isset($_GET['register']))
             $ID = mysql_fetch_assoc(mysql_query("SELECT * FROM `". get_table('users') ."` WHERE `Email` = '{$email}';"));
             $ID = $ID['ID'];
             $_SESSION['familysite'] = $ID;
-            $success = "You have been successfully registered and logged in to the ". mb_convert_case(get_table('SiteName'), MB_CASE_LOWER) .". Welcome aboard, {$name}! Now, take a look at some preferences you can set.";
+            $success = "You have been successfully registered and logged in to ". get_table('SiteName') .". Welcome aboard, {$name}! Now, take a look at some preferences you can set.";
             $pagedone = 1;
             }
           else
@@ -91,7 +91,7 @@ if(isset($_GET['register']))
     
     $infoquery = mysql_fetch_assoc(mysql_query("SELECT * FROM `". get_table('users') ."` WHERE `ID` = '". mysql_real_escape_string($_POST['ID']) ."';"));
     
-    send_notification($infoquery['ID'], -2, get_table('SiteName') ." Registration Confirmation", "Thanks for registering on the ". mb_convert_case(get_table('SiteName'), MB_CASE_LOWER) ."! We just want to thank you for using the site, and we hope you enjoy it!<br /><br />
+    send_notification($infoquery['ID'], -2, get_table('SiteName') ." Registration Confirmation", "Thanks for registering on ". get_table('SiteName') ."! We just want to thank you for using the site, and we hope you enjoy it!<br /><br />
 <strong>Take a look at some of our brand-new features:</strong><br />
 <ul>
   <li>You can now attach photos to blog posts. <a href=\"entry.php?entry=73\">Take a look at an example &raquo;</a></li>
@@ -110,6 +110,7 @@ Enjoy the new features, and if you have any questions, you might want to check o
 ?><html>
 <head>
 <link type="text/css" href="system/style.css" rel="stylesheet">
+<link type="text/css" href="system/sysform.css" rel="stylesheet" />
 <script type="text/javascript" src="system/engine.js"></script>
 <script type="text/javascript">
 function checkpasses()
@@ -126,11 +127,7 @@ else
   }
 }
 </script>
-<style type="text/css">
-body {
-background-color: #A3A3A3 }
-</style>
-<title>Register for the <?php print get_table('SiteName'); ?></title>
+<title>Register for <?php print get_table('SiteName'); ?></title>
 <?php include "header.php"; ?>
 </head>
 <body>
@@ -193,21 +190,27 @@ if(!isset($success) AND $pagedone != 2)
   if(isset($error))
     print "<p class=\"error\">The following errors were found:<br />{$error}</p>";
 
-  print '<label for="name">Name:</label> <input type="text" name="name" id="name"';
+  print '<label for="name">Name:</label><br /><input type="text" name="name" id="name"';
   
   if(isset($_POST['name'])) print " value=\"{$_POST['name']}\"";
   
   print '><br />
-<label for="email">Email Address:</label> <input type="text" name="email" id="email" size="40" onBlur=" check(\'email\', this.value);"';
+<label for="email">Email Address:</label><br /><input type="text" name="email" id="email" size="40" onBlur=" check(\'email\', this.value);"';
 
   if(isset($_POST['email'])) print " value=\"{$_POST['email']}\"";
   
   print '> <span id="emailstatus"></span><br />
-<label for="password">Password:</label> <input type="password" name="password" id="password"><br />
-<label for="cpassword">Password Again:</label> <input type="password" name="cpassword" id="cpassword" onBlur=" checkpasses();"> <span id="pass_status" class="error"></span><br />
-<label for="auth">Authorization Code:</label> <input type="text" name="auth" id="auth"';
-  
-  if(isset($_GET['auth'])) print " value=\"{$_GET['auth']}\">"; else print "> You should have recieved this in an email.";
+<label for="password">Password:</label><br /><input type="password" name="password" id="password"><br />
+<label for="cpassword">Password Again:</label><br /><input type="password" name="cpassword" id="cpassword" onBlur=" checkpasses();"> <span id="pass_status" class="error"></span><br />';
+	
+	if(strlen(get_config('regauth'))>0) {
+		print '<label for="auth">Authorization Code:</label><br /><input type="text" name="auth" id="auth"';
+		
+		if(isset($_GET['auth'])) print " value=\"{$_GET['auth']}\">"; else print "> You should have recieved this in an email.";
+	}
+	
+	else
+		print '<input type="hidden" name="regauth" value="" />';
   
   print '<br />
 <input type="submit" value="Register&raquo;" name="submit">
