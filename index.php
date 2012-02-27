@@ -21,6 +21,10 @@ tbody #blog {
 background-color: #FFF;
 border: none }
 
+	tbody #blog p {
+		margin-bottom: 0;
+	}
+
 h1 {
 padding: 0;
 margin: 0 }
