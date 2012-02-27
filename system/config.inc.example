@@ -37,4 +37,7 @@ $config['notifications'] = "notifications";
 $config['pollq'] = "pollq";
 $config['polla'] = "polla";
 $config['files'] = "files";
+
+// Password encryption salt (don't change this unless you know what you're doing)
+$config['salt'] = "$2a$07$5%TZkl3pEE^)(dFFf*&70$";
 ?>
