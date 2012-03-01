@@ -37,13 +37,43 @@ if(isset($_GET['login']))
 <link type="text/css" href="system/sysform.css" rel="stylesheet" />
 <script type="text/javascript">
 function prepForm() {
-document.getElementById('email').select();
+	document.getElementById('email').select();
+}
+
+function focusEmail(value, target) {
+	if(value=="Email Address...") {
+		target.value = '';
+		target.className='activeinput';
+	}
+}
+
+function blurEmail(value, target) {
+	if(value=='' || value=="Email Address...") {
+		target.value = "Email Address...";
+		target.className='passiveinput';
+	}
+}
+
+function focusPass(value, target) {
+	if(value=="Password...") {
+		target.value = "";
+		target.type="password";
+		target.className="activeinput";
+	}
+}
+
+function blurPass(value, target) {
+	if(value=='' || value=="Password...") {
+		target.value = "Password"...
+		target.type = "text";
+		target.className="passiveinput";
+	}
 }
 </script>
 <title>Login to <?php print get_table('SiteName'); ?></title>
 <?php include "header.php"; ?>
 </head>
-<body onload="prepForm();">
+<body>
 <form action="login.php?login" method="post">
 <fieldset>
 <legend>Please login to view <?php print get_config('SiteName'); ?>.</legend>
@@ -57,8 +87,8 @@ if(isset($_POST['go']))
   print "<input type=\"hidden\" name=\"go\" value=\"". str_replace("%", "&amp;", $_POST['go']) ."\">";
 ?>
 <div class="center">
-<label for="email">Email Address:</label><br /><input type="text" name="email" id="email"><br />
-<label for="password">Password:</label><br /><input type="password" name="password" id="password"><br />
+<input type="text" name="email" id="email" value="Email Address..." onfocus="focusEmail(this.value, this);" onblur="blurEmail(this.value, this);" class="passiveinput"><br />
+<input type="text" name="password" id="password" value="Password..." onfocus="focusPass(this.value, this);" onblur="blurPass(this.value, this);" class="passiveinput"><br />
 <p class="submit"><input type="submit" id="login" value="Login &raquo;"></p>
 </div>
 <p class="formfooter"><a href="resetpassword.php">Forgotten Password?</a></p>
