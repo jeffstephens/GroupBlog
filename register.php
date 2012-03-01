@@ -92,17 +92,17 @@ if(isset($_GET['register']))
     $infoquery = mysql_fetch_assoc(mysql_query("SELECT * FROM `". get_table('users') ."` WHERE `ID` = '". mysql_real_escape_string($_POST['ID']) ."';"));
     
     send_notification($infoquery['ID'], -2, get_table('SiteName') ." Registration Confirmation", "Thanks for registering on ". get_table('SiteName') ."! We just want to thank you for using the site, and we hope you enjoy it!<br /><br />
-<strong>Take a look at some of our brand-new features:</strong><br />
+<strong>Getting Started:</strong><br />
 <ul>
-  <li>You can now attach photos to blog posts. <a href=\"entry.php?entry=73\">Take a look at an example &raquo;</a></li>
-  <li>You can now search the blog! <a href=\"blog.php\">Enter your keywords on this page</a>.</li>
-  <li>There is a weekly poll that you can see in the sidebar on the <a href=\"index.php\">home page</a>. Votes are anonymous. You can also add your own poll ideas and have everyone vote on them!</li>
-  <li>If you use a mobile device such as an iPhone, iPod Touch, Palm Pilot, etc. there is a mobile version of the site that is optimized for your handheld device.</li>
+  <li>Write a blog post! Click <a href=\"addentry.php\">Add Entry</a> at the top-left of any page.</li>
+  <li>Comment on an existing post by clicking the &quot;comments&quot; link right below its title.</li>
+  <li>Vote in the weekly poll, or submit your own poll! You can do this from the <a href=\"index.php\">home page</a>.</li>
+  <li>If you want to change your password, set a security question, or adjust other preferences, visit the <a href=\"preferences.php\">Preferences</a> page.</li>
 </ul>
 <br />
 Enjoy the new features, and if you have any questions, you might want to check out the <a href=\"help/\">Help Section &raquo;</a>.");
     
-    send_notification(1, -2, "New ". get_table('SiteName') ." Member Registered", "<strong>{$infoquery['Name']}</strong> has registered for the family website!");
+    send_notification(1, -2, "New ". get_table('SiteName') ." Member Registered", "<strong>{$infoquery['Name']}</strong> has just signed up!");
     
     $pagedone = 2;
     }
