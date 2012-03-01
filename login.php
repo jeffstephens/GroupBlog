@@ -64,7 +64,7 @@ function focusPass(value, target) {
 
 function blurPass(value, target) {
 	if(value=='' || value=="Password...") {
-		target.value = "Password"...
+		target.value = "Password...";
 		target.type = "text";
 		target.className="passiveinput";
 	}
