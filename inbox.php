@@ -381,7 +381,7 @@ elseif(isset($_GET['unread']))
     }
 
 else
-  print '<div class="yellow" style="text-align: center">Below are the notifications you\'ve received on this site. Notifications are automated messages from the Family Website system.<br />
+  print '<div class="yellow" style="text-align: center">Below are the notifications you\'ve received on this site. Notifications are automated messages.<br />
 <a href="inbox.php?deleteall"><img src="system/images/delete.gif"> Delete All Notifications ('. mysql_num_rows(mysql_query("SELECT * FROM `". get_table('notifications') ."` WHERE `InboxID` = {$_SESSION['familysite']} ORDER BY `Sent` DESC;")) .')</a><noscript><br />
 <p class="error">Your browser does not support javascript, so you can\'t use some of the cool features on this page. (Note: You can still do everything, just not as quickly) <a href="http://www.mozilla.com/en-US/firefox/?from=getfirefox">Get Firefox</a> so that you can. (Internet Explorer works too).</noscript></div>';
 

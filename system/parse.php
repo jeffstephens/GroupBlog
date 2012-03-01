@@ -208,7 +208,7 @@ function authorlookup($id)
 {
 if($id <= 0)
   {
-  $authors = Array("0" => "someone using the old family site", "-1" => "Help System", "-2" => "Family Website System", "-3" => "Notification System");
+  $authors = Array("0" => "an unknown user", "-1" => "Help System", "-2" => get_config('SiteName') . " System", "-3" => "Notification System");
   $author = $authors[$id];
   }
 
