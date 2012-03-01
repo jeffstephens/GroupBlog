@@ -65,7 +65,7 @@ color: #666 }
 <span>File Tracking Table:</span> <?php print get_table('files'); ?><br />
 <span>Installation Directory:</span> http://<?php print get_table('publicurl'); ?>/<br />
 <span>Local Server Time:</span> <?php print date("g:i a, n/j/Y"); ?><br />
-<span>Family Website Adjusted Time:</span> <?php print date("g:i a, n/j/Y", (time() + get_table('dateoffset'))); ?> (<?php print get_table('dateoffsethours'); ?> hour difference)
+<span>Adjusted Time:</span> <?php print date("g:i a, n/j/Y", (time() + get_table('dateoffset'))); ?> (<?php print get_table('dateoffsethours'); ?> hour difference)
 </div>
 <br />
 <p id="footer"><?php print get_config("SiteName"); ?> Administration - Last System Update: <?php print date("n/j/Y", (getlastmod() + get_table('dateoffset'))); ?></p>
