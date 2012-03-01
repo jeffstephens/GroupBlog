@@ -213,7 +213,7 @@ if(!isset($success) AND $pagedone != 2)
 		print '<input type="hidden" name="regauth" value="" />';
   
   print '<br />
-<input type="submit" value="Register&raquo;" name="submit">
+<input type="submit" value="Register &raquo;" name="submit">
 </fieldset>
 </form>';
   }

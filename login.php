@@ -35,10 +35,15 @@ if(isset($_GET['login']))
 <head>
 <link type="text/css" href="system/style.css" rel="stylesheet" />
 <link type="text/css" href="system/sysform.css" rel="stylesheet" />
+<script type="text/javascript">
+function prepForm() {
+document.getElementById('email').select();
+}
+</script>
 <title>Login to <?php print get_table('SiteName'); ?></title>
 <?php include "header.php"; ?>
 </head>
-<body>
+<body onload="prepForm();">
 <form action="login.php?login" method="post">
 <fieldset>
 <legend>Please login to view <?php print get_config('SiteName'); ?>.</legend>
@@ -51,10 +56,11 @@ if(isset($_GET['go']))
 if(isset($_POST['go']))
   print "<input type=\"hidden\" name=\"go\" value=\"". str_replace("%", "&amp;", $_POST['go']) ."\">";
 ?>
-
-<label for="email">Email Address:</label> <input type="text" name="email" id="email"><br />
-<label for="password">Password:</label> <input type="password" name="password" id="password"><br />
-<p class="submit"><input type="submit" value="Login &raquo;"></p>
+<div class="center">
+<label for="email">Email Address:</label><br /><input type="text" name="email" id="email"><br />
+<label for="password">Password:</label><br /><input type="password" name="password" id="password"><br />
+<p class="submit"><input type="submit" id="login" value="Login &raquo;"></p>
+</div>
 <p class="formfooter"><a href="resetpassword.php">Forgotten Password?</a></p>
 </fieldset>
 </form>
