@@ -55,7 +55,7 @@ print "<html>
 ". $style ."
 </head>
 <body>
-	<h1>{$title}</h1>
+	<h1>{$title}!</h1>
 	<div class=\"red\" style=\"text-align: center\"><p>{$message}</p></div>
 </body>
 </html>";
